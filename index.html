@@ -3,167 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Music Tap Rush</title>
+<title>Music Tap Rush — Beat Mode</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080812;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{touch-action:manipulation}
-#app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;gap:10px}
-.title{font-size:22px;font-weight:900;letter-spacing:.3px}
-.stats{display:flex;gap:8px}
-.stat{background:#151527;border:1px solid #2b2b45;border-radius:14px;padding:7px 10px;text-align:center;min-width:62px}
-.stat b{display:block;font-size:17px}.stat span{font-size:10px;opacity:.6;text-transform:uppercase}
-#arena{position:relative;flex:1;border-radius:26px;overflow:hidden;background:radial-gradient(circle at 50% 35%,#22234a 0,#101124 42%,#07070e 100%);border:1px solid #292945}
-#arena:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-#target{position:absolute;width:74px;height:74px;border-radius:50%;display:none;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 8%,#75e8ff 9% 32%,#6d52ff 33% 62%,#b02cff 63% 100%);box-shadow:0 0 18px #7c55ff,0 0 50px #5b38ff88;z-index:3}
-#target:after{content:"";position:absolute;inset:-9px;border:3px solid #ffffff88;border-radius:50%;animation:shrink .8s linear forwards}
-@keyframes shrink{to{transform:scale(.15);opacity:.1}}
-#message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:2}
-.card{max-width:340px;background:#111123dd;border:1px solid #30304d;border-radius:24px;padding:24px;backdrop-filter:blur(12px)}
-.card h1{margin:0 0 8px;font-size:30px}.card p{opacity:.72;line-height:1.45;margin:8px 0 18px}
-button{border:0;color:#fff;background:linear-gradient(135deg,#6b55ff,#a42cff);font-weight:900;font-size:16px;border-radius:16px;padding:14px 20px;min-height:50px}
-button:active{transform:scale(.97)}
-#bottom{padding:12px 0 14px;display:flex;gap:9px}
-#file{display:none}
-.small{flex:1;background:#151527;border:1px solid #2b2b45}
-#play{flex:1.2}
-#musicName{font-size:12px;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:2px 0 8px}
-#progress{height:4px;background:#202036;border-radius:4px;overflow:hidden;margin:0 0 5px}
-#bar{height:100%;width:0;background:#8c63ff}
-.hit{position:absolute;color:#fff;font-weight:900;font-size:25px;pointer-events:none;animation:hit .45s ease-out forwards;z-index:5;text-shadow:0 0 15px #fff}
-@keyframes hit{0%{transform:translate(-50%,-50%) scale(.7);opacity:1}100%{transform:translate(-50%,-100px) scale(1.15);opacity:0}}
-#bpm{font-size:11px;opacity:.55;text-align:center}
+html,body{margin:0;height:100%;overflow:hidden;background:#07070d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{touch-action:none}
+#app{height:100%;display:flex;flex-direction:column;padding:max(10px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:center;padding:5px 3px 8px}
+h1{font-size:20px;margin:0;font-weight:950}.stats{display:flex;gap:5px}.stat{background:#151522;border:1px solid #29293b;border-radius:11px;padding:5px 8px;text-align:center;min-width:55px}.stat b{display:block;font-size:15px}.stat span{font-size:8px;opacity:.55}
+#info{text-align:center;font-size:11px;opacity:.65;height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#arena{position:relative;flex:1;overflow:hidden;border-radius:24px;border:1px solid #29293e;background:radial-gradient(circle at 50% 42%,#29214f,#10101e 52%,#050509);box-shadow:inset 0 0 100px #000}
+#target{position:absolute;width:84px;height:84px;border-radius:50%;transform:translate(-50%,-50%);display:none;z-index:4;background:radial-gradient(circle,#fff 0 8%,#6df0ff 9% 33%,#7456ff 34% 68%,#b32cff 69%);box-shadow:0 0 16px #fff,0 0 42px #8055ff}
+#target .outer{position:absolute;inset:-11px;border:3px solid #fff9;border-radius:50%}
+#target.beat .outer{animation:beatRing .22s ease-out}
+@keyframes beatRing{0%{transform:scale(.65);opacity:1}100%{transform:scale(1.15);opacity:.15}}
+#flash{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:1000;opacity:0;pointer-events:none;z-index:8}
+#flash.on{animation:flash .32s ease-out}@keyframes flash{0%{opacity:1;transform:scale(.7)}100%{opacity:0;transform:scale(1.15)}}
+#center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;text-align:center}
+.card{background:#11111eea;border:1px solid #34344b;border-radius:23px;padding:24px;max-width:335px}.card h2{margin:0 0 8px;font-size:28px}.card p{opacity:.72;line-height:1.45;margin:8px 0 18px}
+button{border:0;border-radius:15px;padding:14px 19px;color:white;background:linear-gradient(135deg,#6b54ff,#b32cff);font-size:16px;font-weight:900}button:active{transform:scale(.97)}
+#bottom{display:flex;gap:8px;padding-top:10px}.secondary{flex:1;background:#171724;border:1px solid #2b2b40}.primary{flex:1.2}input{display:none}
+#bar{height:4px;background:#222235;border-radius:4px;margin:0 2px}#progress{height:100%;width:0;background:#9a66ff}
+.float{position:absolute;z-index:9;pointer-events:none;font-weight:950;font-size:24px;animation:up .55s ease-out forwards}@keyframes up{to{transform:translateY(-70px);opacity:0}}
 </style>
+
 </head>
 <body>
 <div id="app">
-<header>
-  <div class="title">🎵 Music Tap Rush</div>
-  <div class="stats">
-    <div class="stat"><b id="score">0</b><span>Score</span></div>
-    <div class="stat"><b id="combo">0</b><span>Combo</span></div>
-    <div class="stat"><b id="best">0</b><span>Best</span></div>
-  </div>
-</header>
-<div id="musicName">Aucune musique importée</div>
-<div id="progress"><div id="bar"></div></div>
-<div id="bpm">BPM : —</div>
-<section id="arena">
-  <div id="message">
-    <div class="card">
-      <h1>Prêt ? ⚡</h1>
-      <p>Importe une musique, puis touche les cibles le plus vite possible au rythme.</p>
-      <button id="importBtn">🎵 Importer une musique</button>
-    </div>
-  </div>
-  <div id="target"></div>
-</section>
-<div id="bottom">
-  <button class="small" id="fileBtn">📂 Musique</button>
-  <button id="play" disabled>▶️ Jouer</button>
-  <input id="file" type="file" accept="audio/*">
+<header><h1>🎵 TAP TO THE BEAT</h1><div class="stats"><div class="stat"><b id="score">0</b><span>SCORE</span></div><div class="stat"><b id="combo">0</b><span>COMBO</span></div><div class="stat"><b id="best">0</b><span>BEST</span></div></div></header>
+<div id="info">Importe une musique</div><div id="bar"><div id="progress"></div></div>
+<div id="arena">
+<div id="center"><div class="card"><h2>BEAT MODE ⚡</h2><p>La cible apparaît <b>sur les vrais beats détectés</b> de ta musique. Tape-la au moment du beat.</p><button id="choose">🎵 Importer une musique</button></div></div>
+<div id="target"><div class="outer"></div></div><div id="flash">PERFECT!</div>
 </div>
-<audio id="audio" preload="auto"></audio>
-</div>
+<div id="bottom"><button class="secondary" id="choose2">📂 Musique</button><button class="primary" id="play" disabled>▶️ Jouer</button><input id="file" type="file" accept="audio/*"></div>
+<audio id="audio" playsinline></audio>
 <script>
-const fileInput=document.getElementById('file'), fileBtn=document.getElementById('fileBtn'), importBtn=document.getElementById('importBtn');
-const playBtn=document.getElementById('play'), audio=document.getElementById('audio'), arena=document.getElementById('arena'), target=document.getElementById('target');
-const msg=document.getElementById('message'), scoreEl=document.getElementById('score'), comboEl=document.getElementById('combo'), bestEl=document.getElementById('best'), bpmEl=document.getElementById('bpm'), nameEl=document.getElementById('musicName'), bar=document.getElementById('bar');
-let score=0,combo=0,best=Number(localStorage.getItem('mtr_best')||0),running=false,lastBeat=-1,beatTimer=null, bpm=120, objectUrl=null, ctx=null, source=null, analyser=null;
-bestEl.textContent=best;
+const $=x=>document.getElementById(x);
+const file=$("file"),audio=$("audio"),arena=$("arena"),target=$("target"),center=$("center");
+let beatTimes=[], nextBeat=0, running=false, score=0,combo=0,best=+localStorage.getItem("tapBeatBest")||0;
+$("best").textContent=best;
 
-function openFile(){fileInput.click()}
-fileBtn.onclick=openFile; importBtn.onclick=openFile;
+$("choose").onclick=()=>file.click(); $("choose2").onclick=()=>file.click();
 
-fileInput.onchange=async e=>{
+file.onchange=async e=>{
  const f=e.target.files[0]; if(!f)return;
- if(objectUrl)URL.revokeObjectURL(objectUrl);
- objectUrl=URL.createObjectURL(f); audio.src=objectUrl; audio.load();
- nameEl.textContent=f.name;
- bpm=await estimateBPM(f);
- bpmEl.textContent='BPM : '+Math.round(bpm)+' • auto';
- playBtn.disabled=false; msg.innerHTML='<div class="card"><h1>Musique prête 🎵</h1><p>BPM détecté : <b>'+Math.round(bpm)+'</b><br>Touche Jouer pour commencer.</p><button onclick="startGame()">▶️ Jouer</button></div>';
+ audio.src=URL.createObjectURL(f); audio.load();
+ $("info").textContent=f.name;
+ center.innerHTML='<div class="card"><h2>Analyse… 🎧</h2><p>Je cherche les <b>beats réels</b> dans ta musique.</p></div>';
+ center.style.display="flex";
+ beatTimes=await detectBeats(f);
+ $("info").textContent=f.name+" • "+beatTimes.length+" beats détectés";
+ $("play").disabled=false;
+ center.innerHTML='<div class="card"><h2>Prêt ⚡</h2><p><b>'+beatTimes.length+'</b> beats détectés.<br>La cible apparaîtra exactement sur les beats.</p><button onclick="startGame()">▶️ Jouer</button></div>';
 };
 
-async function estimateBPM(file){
- // Lightweight local estimate using Web Audio. It never uploads the music.
+async function detectBeats(file){
  try{
-   const ac=new (window.AudioContext||window.webkitAudioContext)();
-   const buf=await ac.decodeAudioData(await file.arrayBuffer());
-   const data=buf.getChannelData(0), sr=buf.sampleRate;
-   const step=Math.max(1,Math.floor(sr/100)); let env=[];
-   for(let i=0;i<data.length;i+=step){
-     let sum=0, end=Math.min(i+step,data.length);
-     for(let j=i;j<end;j++)sum+=data[j]*data[j];
-     env.push(Math.sqrt(sum/(end-i)));
+  const AC=window.AudioContext||window.webkitAudioContext, ac=new AC();
+  const buf=await ac.decodeAudioData(await file.arrayBuffer());
+  const sr=buf.sampleRate, ch=buf.getChannelData(0);
+  // Analyse d'énergie par fenêtres ~10ms puis détection des attaques.
+  const hop=Math.floor(sr*.01), win=Math.floor(sr*.025), env=[];
+  for(let i=0;i<ch.length-win;i+=hop){
+   let s=0;
+   for(let j=0;j<win;j++){let v=ch[i+j];s+=v*v}
+   env.push(Math.sqrt(s/win));
+  }
+  // Flux spectral simplifié: variation d'énergie + lissage.
+  const flux=env.map((v,i)=>Math.max(0,v-(env[i-2]||v)));
+  const smooth=flux.map((_,i)=>{let s=0,n=0;for(let k=-3;k<=3;k++){let q=flux[i+k];if(q!=null){s+=q;n++}}return s/n});
+  const beats=[]; let last=-1;
+  const minGap=.18, radius=18;
+  for(let i=radius;i<smooth.length-radius;i++){
+   let local=0;for(let k=-radius;k<=radius;k++)local+=smooth[i+k];local/=radius*2+1;
+   if(smooth[i]>local*1.35 && smooth[i]>=smooth[i-1] && smooth[i]>=smooth[i+1]){
+    let t=i*.01;
+    if(t-last>=minGap){beats.push(t);last=t}
    }
-   const avg=env.reduce((a,b)=>a+b,0)/env.length;
-   const threshold=avg*1.55, peaks=[];
-   let last=-999;
-   for(let i=2;i<env.length-2;i++){
-     if(env[i]>threshold && env[i]>=env[i-1] && env[i]>=env[i+1]){
-       const t=i*(step/sr);
-       if(t-last>.22){peaks.push(t);last=t}
-     }
-   }
-   if(peaks.length>5){
-     const diffs=[]; for(let i=1;i<peaks.length;i++)diffs.push(peaks[i]-peaks[i-1]);
-     diffs.sort((a,b)=>a-b); const med=diffs[Math.floor(diffs.length/2)];
-     let out=60/med; while(out<70)out*=2; while(out>180)out/=2;
-     await ac.close(); return Math.max(70,Math.min(180,out));
-   }
-   await ac.close();
- }catch(e){}
- return 120;
+  }
+  // Conserver les attaques musicales fortes; fallback sur autocorrélation BPM si trop peu.
+  if(beats.length<8){
+   const bpm=120; const step=60/bpm; beats.length=0;
+   for(let t=.25;t<buf.duration-.05;t+=step)beats.push(t);
+  }
+  await ac.close(); return beats;
+ }catch(e){return []}
 }
 
-function reset(){score=0;combo=0;scoreEl.textContent=0;comboEl.textContent=0;lastBeat=-1}
+function reset(){score=0;combo=0;$("score").textContent=0;$("combo").textContent=0}
 function startGame(){
  if(!audio.src)return;
- reset(); running=true; msg.style.display='none'; target.style.display='block';
+ reset();running=true;nextBeat=0;center.style.display="none";target.style.display="block";
  audio.currentTime=0; audio.play().catch(()=>{});
- scheduleTarget(true);
+ requestAnimationFrame(loop);
 }
-function scheduleTarget(initial=false){
+function loop(){
  if(!running)return;
- const beat=60/bpm;
- const delay=initial?80:Math.max(180,beat*1000*(.75-Math.min(combo,30)*.008));
- clearTimeout(beatTimer); beatTimer=setTimeout(()=>{spawn();scheduleTarget()},delay);
+ const t=audio.currentTime;
+ $("progress").style.width=(audio.duration?100*t/audio.duration:0)+"%";
+ // Affiche chaque cible selon l'horodatage réel du beat de la piste.
+ while(nextBeat<beatTimes.length && beatTimes[nextBeat]<=t+0.045){
+   showBeat(beatTimes[nextBeat]); nextBeat++;
+ }
+ if(!audio.ended)requestAnimationFrame(loop);
 }
-function spawn(){
- if(!running)return;
- const r=38, w=arena.clientWidth, h=arena.clientHeight;
- const x=r+Math.random()*(w-r*2), y=r+Math.random()*(h-r*2);
- target.style.left=x+'px';target.style.top=y+'px';
- target.dataset.t=performance.now();
- target.style.setProperty('--life',Math.max(350,750-combo*8)+'ms');
- target.querySelector?.('x');
- target.classList.remove('dummy'); void target.offsetWidth;
+function showBeat(bt){
+ const pad=48,w=arena.clientWidth,h=arena.clientHeight;
+ const x=pad+Math.random()*(w-pad*2), y=pad+Math.random()*(h-pad*2);
+ target.style.left=x+"px";target.style.top=y+"px";target.dataset.beat=bt;
+ target.classList.remove("beat");void target.offsetWidth;target.classList.add("beat");
+ // Un seul beat = une seule cible. Elle reste jusqu'au prochain beat.
 }
-function tap(x,y){
+function tap(e){
  if(!running)return;
- const rect=arena.getBoundingClientRect(), tx=Number.parseFloat(target.style.left), ty=Number.parseFloat(target.style.top);
- const dx=x-rect.left-tx,dy=y-rect.top-ty;
- if(Math.hypot(dx,dy)<=48 && target.style.display!=='none'){
-   const reaction=Math.max(0,performance.now()-Number(target.dataset.t||performance.now()));
-   combo++; score+=100+Math.max(0,100-Math.floor(reaction/5))+combo*5;
-   scoreEl.textContent=score;comboEl.textContent=combo;
-   if(score>best){best=score;bestEl.textContent=best;localStorage.setItem('mtr_best',best)}
-   const h=document.createElement('div');h.className='hit';h.textContent='+'+(100+combo*5);h.style.left=(tx)+'px';h.style.top=(ty)+'px';arena.appendChild(h);setTimeout(()=>h.remove(),450);
-   spawn();
- }else{
-   combo=0;comboEl.textContent=0;
+ const rect=arena.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
+ const tx=parseFloat(target.style.left),ty=parseFloat(target.style.top);
+ if(!Number.isFinite(tx))return;
+ const d=Math.hypot(x-tx,y-ty), bt=Number(target.dataset.beat);
+ const delta=Math.abs(audio.currentTime-bt);
+ if(d<52 && delta<.22){
+   const quality=delta<.07?"PERFECT!":delta<.14?"GREAT!":"GOOD!";
+   combo++;score+=Math.round((delta<.07?300:delta<.14?200:100)+combo*8);
+   $("score").textContent=score;$("combo").textContent=combo;
+   if(score>best){best=score;$("best").textContent=best;localStorage.setItem("tapBeatBest",best)}
+   const f=$("flash");f.textContent=quality;f.classList.remove("on");void f.offsetWidth;f.classList.add("on");
+   const n=document.createElement("div");n.className="float";n.textContent="+"+(delta<.07?300:delta<.14?200:100);n.style.left=tx+"px";n.style.top=ty+"px";arena.appendChild(n);setTimeout(()=>n.remove(),550);
+   target.style.display="none";
+ } else if(d<65){
+   combo=0;$("combo").textContent=0;
  }
 }
-arena.addEventListener('pointerdown',e=>tap(e.clientX,e.clientY),{passive:true});
-audio.addEventListener('timeupdate',()=>{if(audio.duration)bar.style.width=(audio.currentTime/audio.duration*100)+'%'});
-audio.addEventListener('ended',endGame);
-function endGame(){
- running=false;clearTimeout(beatTimer);target.style.display='none';msg.style.display='flex';
- msg.innerHTML='<div class="card"><h1>Fin de partie 🏆</h1><p>Score : <b>'+score+'</b><br>Meilleur score : <b>'+best+'</b></p><button onclick="startGame()">🔄 Rejouer</button></div>';
-}
-window.startGame=startGame;
+arena.addEventListener("pointerdown",tap,{passive:true});
+audio.addEventListener("ended",()=>{
+ running=false;target.style.display="none";center.style.display="flex";
+ center.innerHTML='<div class="card"><h2>Terminé 🏆</h2><p>Score : <b>'+score+'</b><br>Meilleur : <b>'+best+'</b></p><button onclick="startGame()">🔄 Rejouer</button></div>';
+});
+$("play").onclick=startGame;
 </script>
 </body>
-</html>
